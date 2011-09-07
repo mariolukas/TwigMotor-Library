@@ -111,6 +111,15 @@ void TwigMotor::setSpeed(long whatSpeed)
 }
 
 /*
+  Release Motor
+*/ 
+
+void TwigMotor::release(void){
+     setPWM(0);
+     setChannel(0b00000000);
+}
+
+/*
   Moves the motor steps_to_move steps.  If the number is negative, 
    the motor moves in the reverse direction.
  */
@@ -148,7 +157,7 @@ void TwigMotor::step(int steps_to_move, int direction)
       stepMotor(this->step_number % 4);
     }
   }
- 
+  
 }
 
 /*

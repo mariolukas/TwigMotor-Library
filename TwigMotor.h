@@ -54,6 +54,9 @@ class TwigMotor {
     
     // Change Motor I2C  Address
     void changeAddr(unsigned char new_addr, unsigned char save_or_not);	
+
+    // Release
+    void release(void);
  
     int version(void);
 

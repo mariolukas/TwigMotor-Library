@@ -39,6 +39,8 @@ void loop()
   delay(1000);
   // move 100 steps backward
   stepper.step(100,BACKWARD);
+  // release stepper
+  stepper.release();	
   delay(1000);
  
 }
