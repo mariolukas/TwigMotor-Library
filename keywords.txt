@@ -14,7 +14,6 @@ TwigMotor	KEYWORD1
 
 step	       KEYWORD2
 setSpeed       KEYWORD2
-version	       KEYWORD2
 changeAddress  KEYWORD2
 
 ######################################
