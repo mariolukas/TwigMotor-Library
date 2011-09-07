@@ -14,7 +14,8 @@
 
 // change this to the number of steps on your motor
 #define STEPS 48
-
+// change this to the shield address
+#define ADDR  0x28
 // create an instance of the TwigMotor class, specifying
 // number of steps and I2C address, here 0x28 motor shield 
 // standard address is used
@@ -22,7 +23,7 @@
 // save_options:
 // - SAVEADDR   
 // - NOTSAVEADDR
-TwigMotor stepper(STEPS, 0x28);
+TwigMotor stepper(STEPS, ADDR);
 
 void setup()
 {
