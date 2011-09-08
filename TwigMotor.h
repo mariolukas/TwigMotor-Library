@@ -40,23 +40,25 @@
 #define SETFREQ 0x84
 #define SETPWM 0x82
 
+
 // library interface description
 class TwigMotor {
   public:
     // constructors:
     TwigMotor(int number_of_steps, unsigned char addr);
+    TwigMotor(int number_of_steps);
 
     // speed setter method:
-    void setSpeed(long whatSpeed);
+    void setSpeed(unsigned char motor_addr, long whatSpeed);
 
     // mover method:
-    void step(int number_of_steps, int direction);
+    void step(unsigned char motor_addr, int number_of_steps, int direction);
     
     // Change Motor I2C  Address
-    void changeAddr(unsigned char new_addr, unsigned char save_or_not);	
+    void changeAddr(unsigned char motor_addr,unsigned char new_addr, unsigned char save_or_not);	
 
     // Release
-    void release(void);
+    void release(unsigned char motor_addr);
  
     int version(void);
 
@@ -66,6 +68,8 @@ class TwigMotor {
     void setChannel(unsigned char value); 
     void fre_pre(unsigned char pres);   
     void setPWM(unsigned char pwm);	
+    void speedAB(unsigned char spda , unsigned char spdb);
+    void motorAndspd( unsigned char motor_s,unsigned char Mstatus, unsigned char spd);
  
     int direction;             // Direction of rotation
     int speed;                 // Speed in RPMs

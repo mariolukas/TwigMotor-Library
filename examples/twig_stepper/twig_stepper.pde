@@ -23,7 +23,7 @@
 // save_options:
 // - SAVEADDR   
 // - NOTSAVEADDR
-TwigMotor stepper(STEPS, ADDR);
+TwigMotor stepper(STEPS);
 
 void setup()
 {
@@ -35,12 +35,12 @@ void loop()
 {
 
   // move 100 steps forward 
-  stepper.step(100,FORWARD);
+  stepper.step(0x28,100,FORWARD);
   delay(1000);
   // move 100 steps backward
-  stepper.step(100,BACKWARD);
+  stepper.step(0x28,100,BACKWARD);
   // release stepper
-  stepper.release();	
+  stepper.release(0x28);	
   delay(1000);
  
 }

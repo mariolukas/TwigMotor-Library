@@ -44,11 +44,27 @@
 TwigMotor::TwigMotor(int number_of_steps, unsigned char addr)
 {
   this->step_number = 0;                       // which step the motor is on
-  this->speed = 0;                             // the motor speed, in revolutions per minute
+  this->speed = 100;                             // the motor speed, in revolutions per minute
   this->direction = 0;                         // motor direction
   this->last_step_time = 0;                    // time stamp in ms of the last step taken
   this->number_of_steps = number_of_steps;     // total number of steps for this motor
   this->address = addr;  
+  
+  // pin_count is used by the stepMotor() method:  
+  this->pin_count = 4; 
+//  Wire.begin();	                               // init I2C communication
+//  delayMicroseconds(10); 
+
+}
+
+TwigMotor::TwigMotor(int number_of_steps)
+{
+  this->step_number = 0;                       // which step the motor is on
+  this->speed = 100;                             // the motor speed, in revolutions per minute
+  this->direction = 0;                         // motor direction
+  this->last_step_time = 0;                    // time stamp in ms of the last step taken
+  this->number_of_steps = number_of_steps;     // total number of steps for this motor
+  this->address = 0x28;  
   
   // pin_count is used by the stepMotor() method:  
   this->pin_count = 4; 
@@ -66,12 +82,14 @@ void TwigMotor::setChannel(unsigned char value){
   Wire.send(value);
   Wire.send(0);
   Wire.endTransmission();
+  delayMicroseconds(100);
 }
 
 /* 
    changes I2C shield address
 */
-void TwigMotor::changeAddr(unsigned char new_addr,unsigned char save_or_not){
+void TwigMotor::changeAddr(unsigned char motor_addr, unsigned char new_addr,unsigned char save_or_not){
+  this->address = motor_addr;
   Wire.beginTransmission(this->address);
   Wire.send(CHANGEADDR);
   Wire.send(new_addr);
@@ -81,6 +99,15 @@ void TwigMotor::changeAddr(unsigned char new_addr,unsigned char save_or_not){
   delayMicroseconds(100);
 }
 
+void TwigMotor::speedAB(unsigned char spda , unsigned char spdb){
+  Wire.beginTransmission(this->address); // transmit to device MOTORSHIELDaddr
+  Wire.send(SETPWM);        //set pwm header 
+  Wire.send(spda);              // send pwma 
+  Wire.send(spdb);              // send pwmb    
+  Wire.endTransmission();    // stop transmitting
+}
+ 
+
 void TwigMotor::fre_pre(unsigned char pres){
   Wire.beginTransmission(this->address); 
   Wire.send(SETFREQ);
@@ -88,6 +115,16 @@ void TwigMotor::fre_pre(unsigned char pres){
   Wire.send(0);
   Wire.endTransmission();
 }
+
+void TwigMotor::motorAndspd( unsigned char motor_s,unsigned char Mstatus, unsigned char spd)
+{
+  Wire.beginTransmission(this->address); // transmit to device MOTORSHIELDaddr
+  Wire.send(motor_s);        // motor select information
+  Wire.send(Mstatus);        // motor satus information
+  Wire.send(spd);            //  motor speed information
+  Wire.endTransmission();    // 
+}
+
 
 /* 
   sets motor pwm
@@ -104,28 +141,32 @@ void TwigMotor::setPWM(unsigned char pwm_value){
   Sets the speed in revs per minute
 
 */
-void TwigMotor::setSpeed(long whatSpeed)
+void TwigMotor::setSpeed(unsigned char motor_addr,long whatSpeed)
 {
+  this->address = motor_addr;
   this->step_delay = 60L * 1000L / this->number_of_steps / whatSpeed;
-
+  this->speed = whatSpeed;
 }
 
 /*
   Release Motor
 */ 
 
-void TwigMotor::release(void){
-     setPWM(0);
-     setChannel(0b00000000);
+void TwigMotor::release(unsigned char motor_addr){
+  	
+        this->address = motor_addr;
+	setPWM(0);	
+	setChannel(0b00000000);
 }
 
 /*
   Moves the motor steps_to_move steps.  If the number is negative, 
    the motor moves in the reverse direction.
  */
-void TwigMotor::step(int steps_to_move, int direction)
+void TwigMotor::step(unsigned char motor_addr, int steps_to_move, int direction)
 { 
-  
+  // switch to actual address ... 
+  this->address = motor_addr;
   this->direction = direction;
   setPWM(255);	  
  	
@@ -157,6 +198,7 @@ void TwigMotor::step(int steps_to_move, int direction)
       stepMotor(this->step_number % 4);
     }
   }
+  release(this->address);
   
 }
 
@@ -168,15 +210,26 @@ void TwigMotor::stepMotor(int thisStep)
    switch (thisStep) 
    {
       case 0:    // 1010
-	setChannel(0b00001010);		
+//	motorAndspd(0xa5,0b10,this->speed);
+//	motorAndspd(0xa1,0b10,this->speed);
+ 	setChannel(0b00001010);		
      break;
       case 1:    // 0110
-	setChannel(0b00000110);
+//	motorAndspd(0xa5,0b01,this->speed);
+//	motorAndspd(0xa1,0b10,this->speed);
+  	
+ 	setChannel(0b00000110);
      break;
       case 2:    //0101
+//	motorAndspd(0xa5,0b01,this->speed);
+// 	motorAndspd(0xa1,0b01,this->speed);
+  	
 	setChannel(0b00000101);
      break;
       case 3:    //1001
+//	motorAndspd(0xa5,0b10,this->speed);
+//	motorAndspd(0xa1,0b01,this->speed);
+  	
 	setChannel(0b00001001);
      break;
     } 
