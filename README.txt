@@ -1,3 +1,5 @@
+FOR Arduino IDE >= 022 
+
 This is the September 09, 2011 Twig I2C Motor Driver firmware with basic StepperSupport. Works with all Arduinos and the Mega.
 
 More information about the shield can be found here: 
