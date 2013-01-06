@@ -28,12 +28,18 @@
      2  0  1  1  0
      3  0  1  0  1
      4  1  0  0  1
-
-
+  
+  *
+  * Updated for Arduino 1.0 by Dieter Vandoren
+  * Date: 2012-01-06
+  *
+  * hpp://dietervandoren.net
+  *
+ 
  */
-#include "WProgram.h"
+#include "Arduino.h"
 #include "TwigMotor.h"
-#include "../Wire/Wire.h"
+#include "Wire.h"
 
 
 /*
@@ -78,9 +84,9 @@ TwigMotor::TwigMotor(int number_of_steps)
 */
 void TwigMotor::setChannel(unsigned char value){
   Wire.beginTransmission(this->address);
-  Wire.send(CHANNELSET);
-  Wire.send(value);
-  Wire.send(0);
+  Wire.write(CHANNELSET);
+  Wire.write(value);
+  Wire.write(0);
   Wire.endTransmission();
   delayMicroseconds(100);
 }
@@ -91,9 +97,9 @@ void TwigMotor::setChannel(unsigned char value){
 void TwigMotor::changeAddr(unsigned char motor_addr, unsigned char new_addr,unsigned char save_or_not){
   this->address = motor_addr;
   Wire.beginTransmission(this->address);
-  Wire.send(CHANGEADDR);
-  Wire.send(new_addr);
-  Wire.send(save_or_not);
+  Wire.write(CHANGEADDR);
+  Wire.write(new_addr);
+  Wire.write(save_or_not);
   Wire.endTransmission();
   this->address = new_addr;
   delayMicroseconds(100);
@@ -101,27 +107,27 @@ void TwigMotor::changeAddr(unsigned char motor_addr, unsigned char new_addr,unsi
 
 void TwigMotor::speedAB(unsigned char spda , unsigned char spdb){
   Wire.beginTransmission(this->address); // transmit to device MOTORSHIELDaddr
-  Wire.send(SETPWM);        //set pwm header 
-  Wire.send(spda);              // send pwma 
-  Wire.send(spdb);              // send pwmb    
+  Wire.write(SETPWM);        //set pwm header 
+  Wire.write(spda);              // send pwma 
+  Wire.write(spdb);              // send pwmb    
   Wire.endTransmission();    // stop transmitting
 }
  
 
 void TwigMotor::fre_pre(unsigned char pres){
   Wire.beginTransmission(this->address); 
-  Wire.send(SETFREQ);
-  Wire.send(pres);
-  Wire.send(0);
+  Wire.write(SETFREQ);
+  Wire.write(pres);
+  Wire.write(0);
   Wire.endTransmission();
 }
 
 void TwigMotor::motorAndspd( unsigned char motor_s,unsigned char Mstatus, unsigned char spd)
 {
   Wire.beginTransmission(this->address); // transmit to device MOTORSHIELDaddr
-  Wire.send(motor_s);        // motor select information
-  Wire.send(Mstatus);        // motor satus information
-  Wire.send(spd);            //  motor speed information
+  Wire.write(motor_s);        // motor select information
+  Wire.write(Mstatus);        // motor satus information
+  Wire.write(spd);            //  motor speed information
   Wire.endTransmission();    // 
 }
 
@@ -131,9 +137,9 @@ void TwigMotor::motorAndspd( unsigned char motor_s,unsigned char Mstatus, unsign
 */
 void TwigMotor::setPWM(unsigned char pwm_value){
   Wire.beginTransmission(this->address); 
-  Wire.send(SETPWM);
-  Wire.send(pwm_value);
-  Wire.send(pwm_value);
+  Wire.write(SETPWM);
+  Wire.write(pwm_value);
+  Wire.write(pwm_value);
   Wire.endTransmission();
 }	
 
