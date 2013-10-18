@@ -6,6 +6,13 @@
  * A stepper motor example, steps forward and backward
  *
  * http://www.mariolukas.de
+ *
+ *
+ * Updated for Arduino 1.0 by Dieter Vandoren
+ * Date: 2012-01-06
+ *
+ * http://dietervandoren.net
+ *
  */
 
 #include <Wire.h>
@@ -28,19 +35,19 @@ TwigMotor stepper(STEPS);
 void setup()
 {
   // set the speed of the motor to 100 RPMs
-  stepper.setSpeed(100);
+  stepper.setSpeed(ADDR, 100);
 }
 
 void loop()
 {
 
   // move 100 steps forward 
-  stepper.step(0x28,100,FORWARD);
+  stepper.step(ADDR,100,FORWARD);
   delay(1000);
   // move 100 steps backward
-  stepper.step(0x28,100,BACKWARD);
+  stepper.step(ADDR,100,BACKWARD);
   // release stepper
-  stepper.release(0x28);	
+  stepper.release(ADDR);  
   delay(1000);
  
 }
